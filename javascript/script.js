@@ -4,6 +4,7 @@ let currentNumber = 0;
 let btn = document.querySelectorAll("#zero, [id='1'], [id='2'], [id='3'], [id='4'], [id='5'], [id='6'], [id='7'], [id='8'], [id='9']");
 let operators = document.querySelectorAll("#add, #subtract, #multiply, #divide, #equals")
 let topBtn = document.querySelectorAll("#clear, #plus-minus, #delete");
+let dot = document.querySelector("#dot");
 let answer = 0;
 let whichOp = 0;
 
@@ -59,7 +60,6 @@ function numbers(id) {
 
 function add() {
 	answer = currentNumber + storedValue;
-	console.log(answer);
 	storedValue = answer;
 	whichOp = 0;
 }
@@ -69,7 +69,6 @@ function subtract() {
 	if (whichOp === 1) {
 		answer = -answer;
 	}
-	console.log(answer);
 	storedValue = answer;
 	whichOp = 1;
 }
@@ -79,7 +78,6 @@ function multiply() {
 		storedValue = 1;
 	}
 	answer = currentNumber * storedValue;
-	console.log(answer);
 	storedValue = answer;
 	whichOp = 2;
 }
@@ -88,42 +86,43 @@ function divide() {
 	if (storedValue === 0) {
 		storedValue = 1;
 	}
-	answer = currentNumber / storedValue;
-	if (!isFinite(answer)) {
-		screen_text.textContent = "ERROR";
-	}
-	console.log(answer);
-	storedValue = answer;
+	answer = currentNumber / storedValue
+	storedValue = answer.toFixed(2)
 	whichOp = 3;
+}
+
+function period() {
+	screen_text.textContent += "."
 }
 
 
 function equals() {
 	if (whichOp === 0) {
-		screen_text.textContent = parseInt(screen_text.textContent) + answer;
+		screen_text.textContent = parseFloat(screen_text.textContent) + answer;
 		currentNumber = parseInt(screen_text.textContent) + answer;;
 		storedValue = 0
 		whichOp = 4
 	} else if (whichOp === 1) {
-		screen_text.textContent = answer - parseInt(screen_text.textContent);
+		screen_text.textContent = answer - parseFloat(screen_text.textContent);
 		currentNumber = answer - parseInt(screen_text.textContent)  ;
 		storedValue = 0
 		whichOp = 4
 	} else if (whichOp === 2) {
-		screen_text.textContent = answer * parseInt(screen_text.textContent);
+		screen_text.textContent = answer * parseFloat(screen_text.textContent);
 		currentNumber = parseInt(screen_text.textContent) * answer;;
 		storedValue = 0
 		whichOp = 4
 	} else if (whichOp === 3) {
-		screen_text.textContent = answer / parseFloat(screen_text.textContent);
-		currentNumber = 0;
-		storedValue = parseFloat(screen_text.textContent) / answer;
+		let n = answer.toFixed(2) / parseFloat(screen_text.textContent).toFixed(2);
+		screen_text.textContent = Math.round(n*1000)/1000
+		currentNumber = parseFloat(screen_text.textContent).toFixed(2) / answer.toFixed(2);;
+		storedValue = 0;
 		whichOp = 4
 	}
 }
 
 function operate(operation) {
-	currentNumber = parseInt(screen_text.textContent);
+	currentNumber = parseFloat(screen_text.textContent);
 	if (operation === "add") {
 		add();
 		screen_text.textContent = "0";
@@ -135,7 +134,7 @@ function operate(operation) {
 		screen_text.textContent = "0";
 	} else if (operation === "divide") {
 		divide();
-		screen_text = "0";
+		screen_text.textContent = "0";
 	}
 	else if (operation === "equals") {
 		equals();
@@ -173,6 +172,14 @@ for (let i = 0; i < 3; i++) {
 	topButtons(topBtn[i].id);
 	})
 }
+
+// EventListener for Dot
+for (let i = 0; i < 1; i++) {
+	dot.addEventListener('click', () => {
+		period()
+	} )
+}
+
 
 
 
